@@ -1,0 +1,22 @@
+# Terraform файли
+.terraform/
+*.tfstate
+*.tfstate.backup
+
+# Файли з секретами
+*.tfvars
+*.tfvars.json
+.env
+secrets.yaml
+*.pem
+*.key
+
+# Локальні налаштування Kubernetes та Helm
+.kubectl/
+.kube/
+.helm/
+
+# Логи та тимчасові файли
+*.log
+.terraform.lock.hcl
+crash.log

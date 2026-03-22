@@ -1,0 +1,1183 @@
+{
+  "version": 4,
+  "terraform_version": "1.14.5",
+  "serial": 174,
+  "lineage": "674e13a3-ce30-9244-ed16-b94f48041f3a",
+  "outputs": {
+    "minio_access_key": {
+      "value": "admin-user",
+      "type": "string"
+    },
+    "minio_secret_key": {
+      "value": "admin-password-413",
+      "type": "string",
+      "sensitive": true
+    },
+    "postgres_password": {
+      "value": "my-duper-secret-db-pass",
+      "type": "string",
+      "sensitive": true
+    }
+  },
+  "resources": [
+    {
+      "mode": "managed",
+      "type": "helm_release",
+      "name": "argocd",
+      "provider": "provider[\"registry.terraform.io/hashicorp/helm\"]",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "atomic": false,
+            "chart": "argo-cd",
+            "cleanup_on_fail": false,
+            "create_namespace": false,
+            "dependency_update": false,
+            "description": null,
+            "devel": null,
+            "disable_crd_hooks": false,
+            "disable_openapi_validation": false,
+            "disable_webhooks": false,
+            "force_update": false,
+            "id": "argocd",
+            "keyring": null,
+            "lint": false,
+            "manifest": null,
+            "max_history": 0,
+            "metadata": {
+              "app_version": "v3.1.8",
+              "chart": "argo-cd",
+              "first_deployed": 1774179596,
+              "last_deployed": 1774179596,
+              "name": "argocd",
+              "namespace": "argocd",
+              "notes": "\nIn order to access the server UI you have the following options:\n\n1. kubectl port-forward service/argocd-server -n argocd 8080:443\n\n    and then open the browser on http://localhost:8080 and accept the certificate\n\n2. enable ingress in the values file `server.ingress.enabled` and either\n      - Add the annotation for ssl passthrough: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-1-ssl-passthrough\n      - Set the `configs.params.\"server.insecure\"` in the values file and terminate SSL at your ingress: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-2-multiple-ingress-objects-and-hosts\n\n\nAfter reaching the UI the first time you can login with username: admin and the random password generated during the installation. You can find the password by running:\n\nkubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath=\"{.data.password}\" | base64 -d\n\n(You should delete the initial secret afterwards as suggested by the Getting Started Guide: https://argo-cd.readthedocs.io/en/stable/getting_started/#4-login-using-the-cli)\n",
+              "revision": 1,
+              "values": "{\"server\":{\"extraArgs\":[\"--insecure\"]}}",
+              "version": "8.5.10"
+            },
+            "name": "argocd",
+            "namespace": "argocd",
+            "pass_credentials": false,
+            "postrender": null,
+            "recreate_pods": false,
+            "render_subchart_notes": true,
+            "replace": false,
+            "repository": "https://argoproj.github.io/argo-helm",
+            "repository_ca_file": null,
+            "repository_cert_file": null,
+            "repository_key_file": null,
+            "repository_password": null,
+            "repository_username": null,
+            "reset_values": false,
+            "reuse_values": false,
+            "set": [
+              {
+                "name": "server.extraArgs",
+                "type": "",
+                "value": "{--insecure}"
+              }
+            ],
+            "set_list": null,
+            "set_sensitive": null,
+            "set_wo": null,
+            "set_wo_revision": null,
+            "skip_crds": false,
+            "status": "deployed",
+            "timeout": 300,
+            "values": null,
+            "verify": false,
+            "version": "8.5.10",
+            "wait": true,
+            "wait_for_jobs": false
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "repository_password"
+              }
+            ]
+          ],
+          "identity_schema_version": 0,
+          "identity": {
+            "namespace": "argocd",
+            "release_name": "argocd"
+          },
+          "dependencies": [
+            "kubernetes_namespace.ns"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "helm_release",
+      "name": "mlflow",
+      "provider": "provider[\"registry.terraform.io/hashicorp/helm\"]",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "atomic": false,
+            "chart": "./mlflow-5.1.17.tgz",
+            "cleanup_on_fail": false,
+            "create_namespace": false,
+            "dependency_update": false,
+            "description": null,
+            "devel": null,
+            "disable_crd_hooks": false,
+            "disable_openapi_validation": false,
+            "disable_webhooks": false,
+            "force_update": false,
+            "id": "mlflow",
+            "keyring": null,
+            "lint": false,
+            "manifest": null,
+            "max_history": 0,
+            "metadata": {
+              "app_version": "3.3.2",
+              "chart": "mlflow",
+              "first_deployed": 1774180079,
+              "last_deployed": 1774180079,
+              "name": "mlflow",
+              "namespace": "application",
+              "notes": "CHART NAME: mlflow\nCHART VERSION: 5.1.17\nAPP VERSION: 3.3.2\n\n⚠ WARNING: Since August 28th, 2025, only a limited subset of images/charts are available for free.\n    Subscribe to Bitnami Secure Images to receive continued support and security updates.\n    More info at https://bitnami.com and https://github.com/bitnami/containers/issues/83267\n\n** Please be patient while the chart is being deployed **\nYou didn't specify any entrypoint to your code.\nTo run it, you can either deploy again using the `source.launchCommand` option to specify your entrypoint, or execute it manually by jumping into the pods:\n\n1. Get the running pods\n    kubectl get pods --namespace application -l \"app.kubernetes.io/name=mlflow,app.kubernetes.io/instance=mlflow\"\n\n2. Get into a pod\n    kubectl exec -ti [POD_NAME] bash\n\n3. Execute your script as you would normally do.\nMLflow Tracking Server can be accessed through the following DNS name from within your cluster:\n\n    mlflow-tracking.application.svc.cluster.local (port 80)\n\nTo access your MLflow site from outside the cluster follow the steps below:\n\n1. Get the MLflow URL by running these commands:\n\n  NOTE: It may take a few minutes for the LoadBalancer IP to be available.\n        Watch the status with: 'kubectl get svc --namespace application -w mlflow-tracking'\n\n   export SERVICE_IP=$(kubectl get svc --namespace application mlflow-tracking --template \"{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}\")\n   echo \"MLflow URL: http://$SERVICE_IP/\"\n\n2. Open a browser and access MLflow using the obtained URL.\n3. Login with the following credentials below to see your blog:\n\n  echo Username: $(kubectl get secret --namespace application mlflow-tracking -o jsonpath=\"{ .data.admin-user }\" | base64 -d)\n  echo Password: $(kubectl get secret --namespace application mlflow-tracking -o jsonpath=\"{.data.admin-password }\" | base64 -d)\n\nWARNING: There are \"resources\" sections in the chart not set. Using \"resourcesPreset\" is not recommended for production. For production installations, please set the following values according to your workload needs:\n  - run.resources\n  - tracking.resources\n+info https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/\n\n⚠ SECURITY WARNING: Original containers have been substituted. This Helm chart was designed, tested, and validated on multiple platforms using a specific set of Bitnami and Tanzu Application Catalog containers. Substituting other containers is likely to cause degraded security and performance, broken chart features, and missing environment variables.\n\nSubstituted images detected:\n  - /bitnamilegacy/mlflow:3.3.2-debian-12-r0\n\n⚠ SECURITY WARNING: Verifying original container images was skipped. Please note this Helm chart was designed, tested, and validated on multiple platforms using a specific set of Bitnami and Bitnami Secure Images containers. Substituting other containers is likely to cause degraded security and performance, broken chart features, and missing environment variables.\n\n",
+              "revision": 1,
+              "values": "{\"auth\":{\"enabled\":false},\"backendStore\":{\"databaseMigration\":true,\"externalDatabase\":{\"database\":\"mlflow_db\",\"host\":\"rds-emulation-postgresql\",\"password\":\"\",\"port\":5432,\"user\":\"postgres\"}},\"externalS3\":{\"accessKey\":\"\",\"bucket\":\"mlflow-artifacts\",\"host\":\"s3-seaweedfs-s3\",\"port\":8333,\"secretKey\":\"\"},\"global\":{\"security\":{\"allowInsecureImages\":true}},\"image\":{\"pullPolicy\":\"IfNotPresent\",\"registry\":\"\",\"repository\":\"bitnamilegacy/mlflow\",\"tag\":\"3.3.2-debian-12-r0\"},\"readinessProbe\":{\"initialDelaySeconds\":90},\"volumePermissions\":{\"enabled\":false},\"waitContainer\":{\"enabled\":false}}",
+              "version": "5.1.17"
+            },
+            "name": "mlflow",
+            "namespace": "application",
+            "pass_credentials": false,
+            "postrender": null,
+            "recreate_pods": false,
+            "render_subchart_notes": true,
+            "replace": false,
+            "repository": null,
+            "repository_ca_file": null,
+            "repository_cert_file": null,
+            "repository_key_file": null,
+            "repository_password": null,
+            "repository_username": null,
+            "reset_values": false,
+            "reuse_values": false,
+            "set": [
+              {
+                "name": "image.registry",
+                "type": "",
+                "value": ""
+              },
+              {
+                "name": "image.repository",
+                "type": "",
+                "value": "bitnamilegacy/mlflow"
+              },
+              {
+                "name": "image.tag",
+                "type": "",
+                "value": "3.3.2-debian-12-r0"
+              },
+              {
+                "name": "image.pullPolicy",
+                "type": "",
+                "value": "IfNotPresent"
+              },
+              {
+                "name": "auth.enabled",
+                "type": "",
+                "value": "false"
+              },
+              {
+                "name": "auth.createDefaultUser",
+                "type": "",
+                "value": "false"
+              },
+              {
+                "name": "tracking.auth.enabled",
+                "type": "",
+                "value": "false"
+              },
+              {
+                "name": "run.auth.enabled",
+                "type": "",
+                "value": "false"
+              },
+              {
+                "name": "rbac.create",
+                "type": "",
+                "value": "false"
+              },
+              {
+                "name": "postgresql.enabled",
+                "type": "",
+                "value": "false"
+              },
+              {
+                "name": "minio.enabled",
+                "type": "",
+                "value": "false"
+              },
+              {
+                "name": "ingress.enabled",
+                "type": "",
+                "value": "false"
+              },
+              {
+                "name": "volumePermissions.enabled",
+                "type": "",
+                "value": "false"
+              },
+              {
+                "name": "externalDatabase.waitContainer.image.registry",
+                "type": "",
+                "value": "docker.io"
+              },
+              {
+                "name": "externalDatabase.waitContainer.image.repository",
+                "type": "",
+                "value": "bitnamilegacy/mlflow"
+              },
+              {
+                "name": "externalDatabase.waitContainer.image.tag",
+                "type": "",
+                "value": "12-debian-12-r51"
+              },
+              {
+                "name": "externalDatabase.waitContainer.image.pullPolicy",
+                "type": "",
+                "value": "Never"
+              },
+              {
+                "name": "externalDatabase.host",
+                "type": "",
+                "value": "rds-emulation-postgresql"
+              },
+              {
+                "name": "externalDatabase.port",
+                "type": "",
+                "value": "5432"
+              },
+              {
+                "name": "externalDatabase.user",
+                "type": "",
+                "value": "postgres"
+              },
+              {
+                "name": "externalDatabase.password",
+                "type": "",
+                "value": "my-duper-secret-db-pass"
+              },
+              {
+                "name": "externalDatabase.database",
+                "type": "",
+                "value": "mlflow_db"
+              },
+              {
+                "name": "backendStore.databaseMigration",
+                "type": "",
+                "value": "true"
+              },
+              {
+                "name": "backendStore.externalDatabase.host",
+                "type": "",
+                "value": "rds-emulation-postgresql"
+              },
+              {
+                "name": "backendStore.externalDatabase.port",
+                "type": "",
+                "value": "5432"
+              },
+              {
+                "name": "backendStore.externalDatabase.user",
+                "type": "",
+                "value": "postgres"
+              },
+              {
+                "name": "backendStore.externalDatabase.password",
+                "type": "",
+                "value": "my-duper-secret-db-pass"
+              },
+              {
+                "name": "backendStore.externalDatabase.database",
+                "type": "",
+                "value": "mlflow_db"
+              },
+              {
+                "name": "backendStore.databaseMigration",
+                "type": "",
+                "value": "true"
+              },
+              {
+                "name": "externalDatabase.waitContainer.enabled",
+                "type": "",
+                "value": "false"
+              },
+              {
+                "name": "waitContainer.enabled",
+                "type": "",
+                "value": "false"
+              },
+              {
+                "name": "externalS3.waitContainer.enabled",
+                "type": "",
+                "value": "false"
+              },
+              {
+                "name": "image.pullPolicy",
+                "type": "",
+                "value": "IfNotPresent"
+              },
+              {
+                "name": "global.security.allowInsecureImages",
+                "type": "",
+                "value": "true"
+              },
+              {
+                "name": "readinessProbe.initialDelaySeconds",
+                "type": "",
+                "value": "60"
+              },
+              {
+                "name": "readinessProbe.timeoutSeconds",
+                "type": "",
+                "value": "10"
+              },
+              {
+                "name": "externalS3.waitContainer.image.registry",
+                "type": "",
+                "value": "docker.io"
+              },
+              {
+                "name": "externalS3.waitContainer.image.repository",
+                "type": "",
+                "value": "bitnamilegacy/mlflow"
+              },
+              {
+                "name": "externalS3.waitContainer.image.tag",
+                "type": "",
+                "value": "12-debian-12-r51"
+              },
+              {
+                "name": "externalS3.waitContainer.image.pullPolicy",
+                "type": "",
+                "value": "Never"
+              },
+              {
+                "name": "externalS3.host",
+                "type": "",
+                "value": "s3-seaweedfs-s3"
+              },
+              {
+                "name": "externalS3.port",
+                "type": "",
+                "value": "8333"
+              },
+              {
+                "name": "externalS3.protocol",
+                "type": "",
+                "value": "http"
+              },
+              {
+                "name": "externalS3.bucket",
+                "type": "",
+                "value": "mlflow-artifacts"
+              },
+              {
+                "name": "externalS3.accessKey",
+                "type": "",
+                "value": "admin-user"
+              },
+              {
+                "name": "externalS3.secretKey",
+                "type": "",
+                "value": "admin-password-413"
+              },
+              {
+                "name": "externalS3.serveArtifacts",
+                "type": "",
+                "value": "true"
+              },
+              {
+                "name": "resources.requests.cpu",
+                "type": "",
+                "value": "100m"
+              },
+              {
+                "name": "resources.requests.memory",
+                "type": "",
+                "value": "256Mi"
+              },
+              {
+                "name": "resources.limits.cpu",
+                "type": "",
+                "value": "500m"
+              },
+              {
+                "name": "resources.limits.memory",
+                "type": "",
+                "value": "512Mi"
+              }
+            ],
+            "set_list": null,
+            "set_sensitive": null,
+            "set_wo": null,
+            "set_wo_revision": null,
+            "skip_crds": false,
+            "status": "failed",
+            "timeout": 600,
+            "values": null,
+            "verify": false,
+            "version": "5.1.17",
+            "wait": false,
+            "wait_for_jobs": false
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "repository_password"
+              }
+            ],
+            [
+              {
+                "type": "get_attr",
+                "value": "set"
+              },
+              {
+                "type": "index",
+                "value": {
+                  "value": 20,
+                  "type": "number"
+                }
+              },
+              {
+                "type": "get_attr",
+                "value": "value"
+              }
+            ],
+            [
+              {
+                "type": "get_attr",
+                "value": "set"
+              },
+              {
+                "type": "index",
+                "value": {
+                  "value": 26,
+                  "type": "number"
+                }
+              },
+              {
+                "type": "get_attr",
+                "value": "value"
+              }
+            ],
+            [
+              {
+                "type": "get_attr",
+                "value": "set"
+              },
+              {
+                "type": "index",
+                "value": {
+                  "value": 45,
+                  "type": "number"
+                }
+              },
+              {
+                "type": "get_attr",
+                "value": "value"
+              }
+            ]
+          ],
+          "identity_schema_version": 0,
+          "identity": {
+            "namespace": "application",
+            "release_name": "mlflow"
+          },
+          "dependencies": [
+            "kubernetes_namespace.ns"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "helm_release",
+      "name": "postgresql",
+      "provider": "provider[\"registry.terraform.io/hashicorp/helm\"]",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "atomic": false,
+            "chart": "postgresql",
+            "cleanup_on_fail": false,
+            "create_namespace": false,
+            "dependency_update": false,
+            "description": null,
+            "devel": null,
+            "disable_crd_hooks": false,
+            "disable_openapi_validation": false,
+            "disable_webhooks": false,
+            "force_update": false,
+            "id": "rds-emulation",
+            "keyring": null,
+            "lint": false,
+            "manifest": null,
+            "max_history": 0,
+            "metadata": {
+              "app_version": "18.3.0",
+              "chart": "postgresql",
+              "first_deployed": 1774179589,
+              "last_deployed": 1774179589,
+              "name": "rds-emulation",
+              "namespace": "application",
+              "notes": "\nCHART NAME: postgresql\nCHART VERSION: 18.5.5\nAPP VERSION: 18.3.0\n\n⚠ WARNING: Since August 28th, 2025, only a limited subset of images/charts are available for free.\n    Subscribe to Bitnami Secure Images to receive continued support and security updates.\n    More info at https://bitnami.com and https://github.com/bitnami/containers/issues/83267\n\n** Please be patient while the chart is being deployed **\n\nPostgreSQL can be accessed via port 5432 on the following DNS names from within your cluster:\n\n    rds-emulation-postgresql.application.svc.cluster.local - Read/Write connection\n\nTo get the password for \"postgres\" run:\n\n    export POSTGRES_PASSWORD=$(kubectl get secret --namespace application rds-emulation-postgresql -o jsonpath=\"{.data.postgres-password}\" | base64 -d)\n\nTo connect to your database run the following command:\n\n    kubectl run rds-emulation-postgresql-client --rm --tty -i --restart='Never' --namespace application --image registry-1.docker.io/bitnami/postgresql:latest --env=\"PGPASSWORD=$POSTGRES_PASSWORD\" \\\n      --command -- psql --host rds-emulation-postgresql -U postgres -d mlflow_db -p 5432\n\n    \u003e NOTE: If you access the container using bash, make sure that you execute \"/opt/bitnami/scripts/postgresql/entrypoint.sh /bin/bash\" in order to avoid the error \"psql: local user with ID 1001} does not exist\"\n\nTo connect to your database from outside the cluster execute the following commands:\n\n    kubectl port-forward --namespace application svc/rds-emulation-postgresql 5432:5432 \u0026\n    PGPASSWORD=\"$POSTGRES_PASSWORD\" psql --host 127.0.0.1 -U postgres -d mlflow_db -p 5432\n\nWARNING: The configured password will be ignored on new installation in case when previous PostgreSQL release was deleted through the helm command. In that case, old PVC will have an old password, and setting it through helm won't take effect. Deleting persistent volumes (PVs) will solve the issue.\nWARNING: Rolling tag detected (bitnami/postgresql:latest), please note that it is strongly recommended to avoid using rolling tags in a production environment.\n+info https://techdocs.broadcom.com/us/en/vmware-tanzu/bitnami-secure-images/bitnami-secure-images/services/bsi-doc/apps-tutorials-understand-rolling-tags-containers-index.html\nWARNING: Rolling tag detected (bitnami/os-shell:latest), please note that it is strongly recommended to avoid using rolling tags in a production environment.\n+info https://techdocs.broadcom.com/us/en/vmware-tanzu/bitnami-secure-images/bitnami-secure-images/services/bsi-doc/apps-tutorials-understand-rolling-tags-containers-index.html\n",
+              "revision": 1,
+              "values": "{\"auth\":{\"database\":\"mlflow_db\",\"postgresPassword\":\"my-duper-secret-db-pass\"},\"primary\":{\"persistence\":{\"enabled\":true,\"size\":\"8Gi\"},\"resources\":{\"limits\":{\"cpu\":\"500m\",\"memory\":\"600Mi\"},\"requests\":{\"cpu\":\"200m\",\"memory\":\"300Mi\"}}},\"readReplicas\":{\"replicaCount\":0}}",
+              "version": "18.5.5"
+            },
+            "name": "rds-emulation",
+            "namespace": "application",
+            "pass_credentials": false,
+            "postrender": null,
+            "recreate_pods": false,
+            "render_subchart_notes": true,
+            "replace": false,
+            "repository": "oci://registry-1.docker.io/bitnamicharts",
+            "repository_ca_file": null,
+            "repository_cert_file": null,
+            "repository_key_file": null,
+            "repository_password": null,
+            "repository_username": null,
+            "reset_values": false,
+            "reuse_values": false,
+            "set": [
+              {
+                "name": "readReplicas.replicaCount",
+                "type": "",
+                "value": "0"
+              },
+              {
+                "name": "primary.resources.requests.cpu",
+                "type": "",
+                "value": "200m"
+              },
+              {
+                "name": "primary.resources.requests.memory",
+                "type": "",
+                "value": "300Mi"
+              },
+              {
+                "name": "primary.resources.limits.cpu",
+                "type": "",
+                "value": "500m"
+              },
+              {
+                "name": "primary.resources.limits.memory",
+                "type": "",
+                "value": "600Mi"
+              },
+              {
+                "name": "auth.database",
+                "type": "",
+                "value": "mlflow_db"
+              },
+              {
+                "name": "auth.postgresPassword",
+                "type": "",
+                "value": "my-duper-secret-db-pass"
+              },
+              {
+                "name": "primary.persistence.enabled",
+                "type": "",
+                "value": "true"
+              },
+              {
+                "name": "primary.persistence.size",
+                "type": "",
+                "value": "8Gi"
+              }
+            ],
+            "set_list": null,
+            "set_sensitive": null,
+            "set_wo": null,
+            "set_wo_revision": null,
+            "skip_crds": false,
+            "status": "deployed",
+            "timeout": 600,
+            "values": null,
+            "verify": false,
+            "version": "18.5.5",
+            "wait": false,
+            "wait_for_jobs": false
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "repository_password"
+              }
+            ],
+            [
+              {
+                "type": "get_attr",
+                "value": "set"
+              },
+              {
+                "type": "index",
+                "value": {
+                  "value": 6,
+                  "type": "number"
+                }
+              },
+              {
+                "type": "get_attr",
+                "value": "value"
+              }
+            ]
+          ],
+          "identity_schema_version": 0,
+          "identity": {
+            "namespace": "application",
+            "release_name": "rds-emulation"
+          },
+          "dependencies": [
+            "kubernetes_namespace.ns"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "helm_release",
+      "name": "seaweedfs",
+      "provider": "provider[\"registry.terraform.io/hashicorp/helm\"]",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "atomic": false,
+            "chart": "seaweedfs",
+            "cleanup_on_fail": false,
+            "create_namespace": false,
+            "dependency_update": false,
+            "description": null,
+            "devel": null,
+            "disable_crd_hooks": false,
+            "disable_openapi_validation": false,
+            "disable_webhooks": false,
+            "force_update": true,
+            "id": "s3-seaweedfs",
+            "keyring": null,
+            "lint": false,
+            "manifest": null,
+            "max_history": 0,
+            "metadata": {
+              "app_version": "4.17",
+              "chart": "seaweedfs",
+              "first_deployed": 1774179604,
+              "last_deployed": 1774179604,
+              "name": "s3-seaweedfs",
+              "namespace": "application",
+              "notes": "",
+              "revision": 1,
+              "values": "{\"filer\":{\"containerImage\":\"chrislusf/seaweedfs:4.17\",\"data\":{\"size\":\"2Gi\",\"storageClass\":\"standard\",\"type\":\"persistentVolumeClaim\"},\"database\":{\"type\":\"leveldb\"},\"enabled\":true,\"replicas\":1,\"resources\":{\"limits\":{\"cpu\":\"500m\",\"memory\":\"512Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"256Mi\"}}},\"global\":{\"security\":{\"allowInsecureImages\":true}},\"image\":{\"pullPolicy\":\"IfNotPresent\",\"repository\":\"chrislusf/seaweedfs\",\"tag\":\"4.17\"},\"master\":{\"containerImage\":\"chrislusf/seaweedfs:4.17\",\"data\":{\"size\":\"1Gi\",\"storageClass\":\"standard\",\"type\":\"persistentVolumeClaim\"},\"enabled\":true,\"replicas\":1,\"resources\":{\"limits\":{\"cpu\":\"200m\",\"memory\":\"256Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"128Mi\"}}},\"s3\":{\"accessKey\":\"admin-user\",\"containerImage\":\"chrislusf/seaweedfs:4.17\",\"enabled\":true,\"resources\":{\"limits\":{\"cpu\":\"200m\",\"memory\":\"256Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"128Mi\"}},\"secretKey\":\"admin-password-413\"},\"volume\":{\"containerImage\":\"chrislusf/seaweedfs:4.17\",\"dataDirs\":[{\"name\":\"data\",\"size\":\"10Gi\",\"storageClass\":\"standard\",\"type\":\"persistentVolumeClaim\"}],\"enabled\":true,\"resources\":{\"limits\":{\"cpu\":\"500m\",\"memory\":\"512Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"256Mi\"}}}}",
+              "version": "4.17.0"
+            },
+            "name": "s3-seaweedfs",
+            "namespace": "application",
+            "pass_credentials": false,
+            "postrender": null,
+            "recreate_pods": false,
+            "render_subchart_notes": true,
+            "replace": false,
+            "repository": "https://seaweedfs.github.io/seaweedfs/helm",
+            "repository_ca_file": null,
+            "repository_cert_file": null,
+            "repository_key_file": null,
+            "repository_password": null,
+            "repository_username": null,
+            "reset_values": false,
+            "reuse_values": false,
+            "set": [
+              {
+                "name": "image.repository",
+                "type": "",
+                "value": "chrislusf/seaweedfs"
+              },
+              {
+                "name": "image.tag",
+                "type": "",
+                "value": "4.17"
+              },
+              {
+                "name": "image.pullPolicy",
+                "type": "",
+                "value": "IfNotPresent"
+              },
+              {
+                "name": "global.security.allowInsecureImages",
+                "type": "",
+                "value": "true"
+              },
+              {
+                "name": "master.containerImage",
+                "type": "",
+                "value": "chrislusf/seaweedfs:4.17"
+              },
+              {
+                "name": "volume.containerImage",
+                "type": "",
+                "value": "chrislusf/seaweedfs:4.17"
+              },
+              {
+                "name": "filer.containerImage",
+                "type": "",
+                "value": "chrislusf/seaweedfs:4.17"
+              },
+              {
+                "name": "s3.containerImage",
+                "type": "",
+                "value": "chrislusf/seaweedfs:4.17"
+              },
+              {
+                "name": "s3.resources.requests.cpu",
+                "type": "",
+                "value": "100m"
+              },
+              {
+                "name": "s3.resources.requests.memory",
+                "type": "",
+                "value": "128Mi"
+              },
+              {
+                "name": "s3.resources.limits.cpu",
+                "type": "",
+                "value": "200m"
+              },
+              {
+                "name": "s3.resources.limits.memory",
+                "type": "",
+                "value": "256Mi"
+              },
+              {
+                "name": "master.enabled",
+                "type": "",
+                "value": "true"
+              },
+              {
+                "name": "volume.enabled",
+                "type": "",
+                "value": "true"
+              },
+              {
+                "name": "s3.enabled",
+                "type": "",
+                "value": "true"
+              },
+              {
+                "name": "filer.enabled",
+                "type": "",
+                "value": "true"
+              },
+              {
+                "name": "filer.database.type",
+                "type": "",
+                "value": "leveldb"
+              },
+              {
+                "name": "s3.accessKey",
+                "type": "",
+                "value": "admin-user"
+              },
+              {
+                "name": "s3.secretKey",
+                "type": "",
+                "value": "admin-password-413"
+              },
+              {
+                "name": "master.replicas",
+                "type": "",
+                "value": "1"
+              },
+              {
+                "name": "filer.replicas",
+                "type": "",
+                "value": "1"
+              },
+              {
+                "name": "master.data.type",
+                "type": "",
+                "value": "persistentVolumeClaim"
+              },
+              {
+                "name": "master.data.size",
+                "type": "",
+                "value": "1Gi"
+              },
+              {
+                "name": "master.data.storageClass",
+                "type": "",
+                "value": "standard"
+              },
+              {
+                "name": "master.resources.requests.cpu",
+                "type": "",
+                "value": "100m"
+              },
+              {
+                "name": "master.resources.requests.memory",
+                "type": "",
+                "value": "128Mi"
+              },
+              {
+                "name": "master.resources.limits.cpu",
+                "type": "",
+                "value": "200m"
+              },
+              {
+                "name": "master.resources.limits.memory",
+                "type": "",
+                "value": "256Mi"
+              },
+              {
+                "name": "filer.data.type",
+                "type": "",
+                "value": "persistentVolumeClaim"
+              },
+              {
+                "name": "filer.data.size",
+                "type": "",
+                "value": "2Gi"
+              },
+              {
+                "name": "filer.data.storageClass",
+                "type": "",
+                "value": "standard"
+              },
+              {
+                "name": "volume.dataDirs[0].name",
+                "type": "",
+                "value": "data"
+              },
+              {
+                "name": "volume.dataDirs[0].type",
+                "type": "",
+                "value": "persistentVolumeClaim"
+              },
+              {
+                "name": "volume.dataDirs[0].size",
+                "type": "",
+                "value": "10Gi"
+              },
+              {
+                "name": "volume.dataDirs[0].storageClass",
+                "type": "",
+                "value": "standard"
+              },
+              {
+                "name": "volume.resources.requests.cpu",
+                "type": "",
+                "value": "100m"
+              },
+              {
+                "name": "volume.resources.requests.memory",
+                "type": "",
+                "value": "256Mi"
+              },
+              {
+                "name": "volume.resources.limits.cpu",
+                "type": "",
+                "value": "500m"
+              },
+              {
+                "name": "volume.resources.limits.memory",
+                "type": "",
+                "value": "512Mi"
+              },
+              {
+                "name": "filer.resources.requests.cpu",
+                "type": "",
+                "value": "200m"
+              },
+              {
+                "name": "filer.resources.requests.memory",
+                "type": "",
+                "value": "2400Mi"
+              },
+              {
+                "name": "filer.resources.limits.cpu",
+                "type": "",
+                "value": "600m"
+              },
+              {
+                "name": "filer.resources.limits.memory",
+                "type": "",
+                "value": "2800Mi"
+              },
+              {
+                "name": "filer.resources.requests.cpu",
+                "type": "",
+                "value": "100m"
+              },
+              {
+                "name": "filer.resources.requests.memory",
+                "type": "",
+                "value": "256Mi"
+              },
+              {
+                "name": "filer.resources.limits.cpu",
+                "type": "",
+                "value": "500m"
+              },
+              {
+                "name": "filer.resources.limits.memory",
+                "type": "",
+                "value": "512Mi"
+              }
+            ],
+            "set_list": null,
+            "set_sensitive": null,
+            "set_wo": null,
+            "set_wo_revision": null,
+            "skip_crds": false,
+            "status": "deployed",
+            "timeout": 600,
+            "values": null,
+            "verify": false,
+            "version": "4.17.0",
+            "wait": false,
+            "wait_for_jobs": false
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "repository_password"
+              }
+            ],
+            [
+              {
+                "type": "get_attr",
+                "value": "set"
+              },
+              {
+                "type": "index",
+                "value": {
+                  "value": 18,
+                  "type": "number"
+                }
+              },
+              {
+                "type": "get_attr",
+                "value": "value"
+              }
+            ]
+          ],
+          "identity_schema_version": 0,
+          "identity": {
+            "namespace": "application",
+            "release_name": "s3-seaweedfs"
+          },
+          "dependencies": [
+            "kubernetes_namespace.ns"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "kubernetes_namespace",
+      "name": "ns",
+      "provider": "provider[\"registry.terraform.io/hashicorp/kubernetes\"]",
+      "instances": [
+        {
+          "index_key": "application",
+          "schema_version": 0,
+          "attributes": {
+            "id": "application",
+            "metadata": [
+              {
+                "annotations": {},
+                "generate_name": "",
+                "generation": 0,
+                "labels": {},
+                "name": "application",
+                "resource_version": "150301",
+                "uid": "746535b8-4116-422a-bb21-a4d82164bbc4"
+              }
+            ],
+            "timeouts": null,
+            "wait_for_default_service_account": false
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiZGVsZXRlIjozMDAwMDAwMDAwMDB9fQ=="
+        },
+        {
+          "index_key": "argocd",
+          "schema_version": 0,
+          "attributes": {
+            "id": "argocd",
+            "metadata": [
+              {
+                "annotations": {},
+                "generate_name": "",
+                "generation": 0,
+                "labels": {},
+                "name": "argocd",
+                "resource_version": "150299",
+                "uid": "e37668ee-1615-4d47-8799-e76e2ee8fd8b"
+              }
+            ],
+            "timeouts": null,
+            "wait_for_default_service_account": false
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiZGVsZXRlIjozMDAwMDAwMDAwMDB9fQ=="
+        },
+        {
+          "index_key": "monitoring",
+          "schema_version": 0,
+          "attributes": {
+            "id": "monitoring",
+            "metadata": [
+              {
+                "annotations": {},
+                "generate_name": "",
+                "generation": 0,
+                "labels": {},
+                "name": "monitoring",
+                "resource_version": "150300",
+                "uid": "f625970a-0b77-496b-9191-7f2e6099d581"
+              }
+            ],
+            "timeouts": null,
+            "wait_for_default_service_account": false
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiZGVsZXRlIjozMDAwMDAwMDAwMDB9fQ=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "kubernetes_resource_quota",
+      "name": "app_quota",
+      "provider": "provider[\"registry.terraform.io/hashicorp/kubernetes\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "application/application-quota",
+            "metadata": [
+              {
+                "annotations": {},
+                "generate_name": "",
+                "generation": 0,
+                "labels": {},
+                "name": "application-quota",
+                "namespace": "application",
+                "resource_version": "151760",
+                "uid": "e253d525-c98b-406a-be4f-3fb227b3ea2b"
+              }
+            ],
+            "spec": [
+              {
+                "hard": {
+                  "cpu": "3",
+                  "memory": "4Gi",
+                  "pods": "10"
+                },
+                "scope_selector": [],
+                "scopes": []
+              }
+            ],
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMCwidXBkYXRlIjo2MDAwMDAwMDAwMH19",
+          "dependencies": [
+            "kubernetes_namespace.ns"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "kubernetes_secret",
+      "name": "mlflow_s3_creds",
+      "provider": "provider[\"registry.terraform.io/hashicorp/kubernetes\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "binary_data": null,
+            "data": {
+              "AWS_ACCESS_KEY_ID": "admin-user",
+              "AWS_SECRET_ACCESS_KEY": "admin-password-413",
+              "MLFLOW_S3_ENDPOINT_URL": "http://s3-seaweedfs-filer.application.svc.cluster.local:8333"
+            },
+            "id": "application/mlflow-s3-creds",
+            "immutable": false,
+            "metadata": [
+              {
+                "annotations": {},
+                "generate_name": "",
+                "generation": 0,
+                "labels": {},
+                "name": "mlflow-s3-creds",
+                "namespace": "application",
+                "resource_version": "150308",
+                "uid": "4e0fd0ce-7a08-4d04-98c5-504c3cc9e169"
+              }
+            ],
+            "timeouts": null,
+            "type": "Opaque",
+            "wait_for_service_account_token": true
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "binary_data"
+              }
+            ],
+            [
+              {
+                "type": "get_attr",
+                "value": "data"
+              }
+            ],
+            [
+              {
+                "type": "get_attr",
+                "value": "data"
+              },
+              {
+                "type": "index",
+                "value": {
+                  "value": "AWS_SECRET_ACCESS_KEY",
+                  "type": "string"
+                }
+              }
+            ]
+          ],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMH19",
+          "dependencies": [
+            "kubernetes_namespace.ns"
+          ]
+        }
+      ]
+    }
+  ],
+  "check_results": null
+}

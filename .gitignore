@@ -1,22 +1,62 @@
-# Terraform файли
+# ==============================================================================
+# MLOPS WORKSPACE: GITIGNORE
+# ==============================================================================
+
+# --- Terraform ---
+# Ігноруємо локальну папку з плагінами та бінарні файли
 .terraform/
+.terraform.lock.hcl
+
+# Ігноруємо стейт-файли (КРИТИЧНО: вони містять паролі у відкритому тексті!)
 *.tfstate
 *.tfstate.backup
-
-# Файли з секретами
 *.tfvars
 *.tfvars.json
-.env
-secrets.yaml
-*.pem
-*.key
 
-# Локальні налаштування Kubernetes та Helm
-.kubectl/
+# --- Kubernetes & Helm ---
+# Конфігурації та тимчасові дані
 .kube/
 .helm/
-
-# Логи та тимчасові файли
+charts/
+tmp/
 *.log
-.terraform.lock.hcl
-crash.log
+
+# --- Секрети та Ключі (Security) ---
+# Ніколи не пушимо файли з паролями чи сертифікатами
+secrets.yaml
+.env
+*.pem
+*.key
+*.crt
+id_rsa*
+
+# --- Python & MLflow ---
+# Кеш та віртуальні середовища
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+
+# Локальні дані експериментів (якщо запускалися поза K8s)
+mlruns/
+mlruns_db/
+outputs/
+.ipynb_checkpoints/
+
+# --- Docker & Images ---
+# Ігноруємо експортовані образи (вони занадто великі для Git)
+*.tar
+*.tar.gz
+*.docker
+
+# --- Системні файли ---
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.bak
+.minikube/
+
+# ==============================================================================

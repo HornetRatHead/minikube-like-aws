@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ml-workspace-apps
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/hornethead/minikube-like-aws.git'
+    targetRevision: HEAD
+    path: k8s-manifests # Течка, де лежать твої YAML файли
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: application
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

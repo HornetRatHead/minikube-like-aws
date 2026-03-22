@@ -1,16 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: root-app
+  name: mlflow
   namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://GH_TOKEN_PLACEHOLDER@github.com/HornetRatHead/minikube-like-aws.git
+    repoURL: https://github.com/HornetRatHead/goit-mlops-lesson8-9.git
     targetRevision: HEAD
-    path: k8s-manifests
+    path: argocd/charts/mlflow
   destination:
     server: https://kubernetes.default.svc
     namespace: application
@@ -19,4 +17,4 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-      - CreateNamespace=true
+    - CreateNamespace=true
